@@ -41,7 +41,7 @@ public class CNFParser {
 
 			int formulaIndex = 1;
 
-			System.out.println("Extracting clausules");
+			System.out.println("Extracting clauses");
 
 			// Read File Line By Line
 			while ((line = br.readLine()) != null && line.length() > 0) {
@@ -79,7 +79,7 @@ public class CNFParser {
 						CNFS.add(f);
 
 						System.out.println(
-								"Extracting clausule " + (formulaIndex) + " / " + numClausules + ": " + f);
+								"Extracting clause " + (formulaIndex) + " / " + numClausules + ": " + f);
 
 						formulaIndex++;
 						if (formulaIndex > numClausules)
