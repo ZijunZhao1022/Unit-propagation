@@ -25,7 +25,6 @@ public class FormulaTest {
 			hm.put(exp_vs[i], exp_res[i]);
 		f.setVmap(hm);
 		
-		
 		ArrayList<String> v = f.getVariables();
 		ArrayList<String> cnfs = f.getCNFS();
 		HashMap<String, Boolean> rhm = f.getVmap();
