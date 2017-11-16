@@ -36,15 +36,19 @@ public class Formula {
                 this.vmap = vmap;
         }
         
-        public void print() {
-                System.out.println("Formula2: ");
+        public String print() {
+		String s="";
+                // System.out.println("Formula2: ");
                 for (int i = 0; i < CNFS.size(); ++i) {
-                        String s = CNFS.get(i);
-                        System.out.print("( " + s + " )");
+                        s += "( " + CNFS.get(i) + " )";
+			// String s = CNFS.get(i);
+                        // System.out.print("( " + s + " )");
                         if (i + 1 != CNFS.size())
-                                System.out.print(" && ");
+				s += " && ";
+                                //System.out.print(" && ");
                 }
-                System.out.println("");
+               // System.out.println("");
+		return s;
         }
         
 }
