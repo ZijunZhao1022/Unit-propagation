@@ -2,5 +2,11 @@
 
 Test Test Test.
 
-Compile the source code: javac SimpleUCP
-                         1.java SimpleUCP
+#compilation Steps:
+
+Compile the source code: 1.javac SimpleUCP.java
+                           java SimpleUCP
+                         2.javac CNFParser.java
+                           java CNFParser
+                         3.javac Formula.java
+                           java Formula
