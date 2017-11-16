@@ -124,7 +124,7 @@ public class SimpleUCP {
                 cp.parse(args[0]);
                 
                 // Print the parsed formula
-                bf.print();
+                System.out.print(bf.print());bf.print();
 
                 // The simplest ucp solver
                 SimpleUCP s = new SimpleUCP(bf);
