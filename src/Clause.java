@@ -20,6 +20,9 @@ public class Clause {
                      else
                              literals.add(new Literal(symbol, true));
              }
+             public boolean hasLiteral(Literal l) {
+		return literals.contains(l);
+	     }
 
 
 
