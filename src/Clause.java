@@ -13,9 +13,13 @@ public class Clause {
                      literals.add(new Literal (symbol, sign))
              } 
              public void addLiteral(int symbol) {
-                     if (symbol < 0){}
+                     if (symbol < 0)
+                     { 
+                             literals.add( new Literal(-symbol,false));                                   
+                     }
                      else
-}
+                             literals.add(new Literal(symbol, true));
+             }
 
 
 
