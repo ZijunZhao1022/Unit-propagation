@@ -25,21 +25,34 @@ public class Clause {
 	     }
 
              public void removeUnit(Literal unit) {
-		int size = literals.size();
-		int index = -1;
-		for(int i=0;i<size;++i) {
-			if(literals.get(i).equals(unit))
-				index = i;
-		}
-		if(index > -1)
-		{
-			if(unit.sign != literals.get(index).sign)
+		    int size = literals.size();
+		    int index = -1;
+		    for(int i=0;i<size;++i) {
+			    if(literals.get(i).equals(unit))
+				   index = i;
+		    }
+		    if(index >= -1)
+		    {
+			   if(unit.sign != literals.get(index).sign)
 				literals.remove(index);
-			else
+			   else
 				literals.clear();
-		}
-	}
+		    }
+	      }
+              public ArrayList<Literal> getLIterals() {
+                      return literals;
+              }
+              public String print() {
+  
+                      String s="";
+                      for(Literal l : literals) {
+                              s+= l.toString() + " ":  
+                      }
+                      return s;
+               }
 
+                private ArrayList<Literal> literals;
+ }
 
 
 }
