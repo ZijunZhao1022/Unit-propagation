@@ -31,7 +31,7 @@ public class Clause {
 			    if(literals.get(i).equals(unit))
 				   index = i;
 		    }
-		    if(index >= -1)
+		    if(index > -1)
 		    {
 			   if(unit.sign != literals.get(index).sign)
 				literals.remove(index);
@@ -46,7 +46,7 @@ public class Clause {
   
                       String s="";
                       for(Literal l : literals) {
-                              s+= l.toString() + " ":  
+                              s+= l.toString() + " "; 
                       }
                       return s;
                }
