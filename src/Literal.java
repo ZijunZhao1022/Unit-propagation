@@ -1,5 +1,7 @@
 public class Literal {
-
+	/**
+	 * constructor for creating a literal with the given sign and symbol index
+	 */
         public Literal(int symbol, boolean sign){
 		System.out.println("add new literal s = " + symbol + " sign = " + sign);
 		this.symbol = symbol;
@@ -25,6 +27,6 @@ public String toString() {
 	public boolean sign;
 
 	/** index of proposition symbol */
-	public int symbol
+	public int symbol£»
 
 }
