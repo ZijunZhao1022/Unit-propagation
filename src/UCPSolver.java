@@ -1,6 +1,6 @@
 import java.FileInputStream;
-import java.FileNotFoundException;
 import java.FileOutputStream;
+import java.io.IOException;
 import java.OutputStream;
 import java.OutputStreamWriter;
 import java.util.ArrayList;
@@ -19,80 +19,129 @@ public class UCPSolver {
 	public UCPSolver(Cnf cnf) {
 		this.cnf = cnf;
 		this.units = new ArrayList<Literal>();
-		getUnits();
 	}
 
-	private void getUnits() {
+	private boolean getUnits() {
 		ArrayList<Clause> c = this.cnf.getClauses();
 		for (int i = 0; i < c.size(); ++i) {
 			ArrayList<Literal> l = c.get(i).getLiterals();
 			if (l.size() == 1) {
-				units.add(l.get(0));
+                              int res = noContradiction(l.get(0));
+			      if (res<0) {
+					return false;
+			      }
+                              if (res>0) units.add(l.get(0));
 			}
 		}
+                return true;
 	}
 
-	public boolean simpleSolver() {
-		while (!units.isEmpty()) {
-			Literal l = units.get(0);
-			for (Clause c : cnf.getClauses()) {
-				c.removeUnit(l);
-			}
-			units.remove(0);
-			getUnits();
+	private int noContradiction(Literal l) {
+		for (Literal u : units) {
+			if (!u.equals(l))
+				continue;
+			else if (u.sign != l.sign) // If contradiction found
+				return -1;
+			else return 0;
 		}
-
-		boolean sat = true;
-		for (Clause c : cnf.getClauses()) {
-			if (!c.getLiterals().isEmpty())
-				sat = false;
-		}
-
-		return sat;
+		return 1;
 	}
 
-	public void simpleSolver(String output) {
-		String pu = "c";
-		while (!units.isEmpty()) {
-			Literal l = units.get(0);
-			for (Clause c : cnf.getClauses()) {
-				c.removeUnit(l);
-			}
-			pu += " " + l.toString();
-			units.remove(0);
-			getUnits();
+	public void simpleSolver(String output) throws IOException {
+
+		// If contradiction found in initial CNFs
+		if (!getUnits()) {
+			resultPrint(output, -1);
+			return;
 		}
 
-		boolean sat = true;
+
+		int uindex = 0;
+		while (!units.isEmpty() && uindex < units.size()) {
+			Literal l = units.get(uindex);
+			// System.out.println("unit " + l.toString());
+			for (Clause c : cnf.getClauses()) {
+				// If contradiction found when simplifying CNFs
+				if (!c.removeUnit(l)) {
+					resultPrint(output, -1);
+					return;
+				}
+			}
+
+			// If contradiction found in simplified CNFs
+			if (!getUnits()) {
+				resultPrint(output, -1);
+				return;
+			}
+
+			++uindex;
+		}
+
 		for (Iterator<Clause> itr = cnf.getClauses().iterator(); itr.hasNext();) {
 			Clause c = itr.next();
-			if (!c.getLiterals().isEmpty())
-				sat = false;
-			else
+			if (!c.getLiterals().isEmpty()) {
+				resultPrint(output, 0);
+				return;
+			}
+		}
+
+		resultPrint(output, 1);
+
+	}
+
+	private void resultPrint(String output, int sat) throws IOException {
+		// Remove empty clauses
+		for (Iterator<Clause> itr = cnf.getClauses().iterator(); itr.hasNext();) {
+			if (itr.next().getLiterals().isEmpty())
 				itr.remove();
 		}
 
-		try {
+		if (output.isEmpty()) {
+			// Print header
+			if (sat > 0)
+				System.out.print("c Found satisfiable.\n");
+			else if (sat < 0)
+				System.out.print("c Found unsatisfiable.\n");
+			else
+				System.out.print("c Found undetermined.\n");
+
+			// Print propagated units
+			System.out.print("c Propagated units:\n");
+			String pu = "c";
+			for (Literal u : units)
+				pu += " " + u;
+			System.out.print(pu + "\n");
+
+			System.out.print("p cnf " + cnf.getSymbols().size() + " " + cnf.getClauses().size() + "\n");
+			System.out.print(cnf.printClauses());
+		} else {
 			OutputStream f = new FileOutputStream(output);
 			OutputStreamWriter writer = new OutputStreamWriter(f);
-			if (sat)
+
+			// Print header
+			if (sat > 0)
 				writer.write("c Found satisfiable.\n");
-			else
+			else if (sat < 0)
 				writer.write("c Found unsatisfiable.\n");
+			else
+				writer.write("c Found undetermined.\n");
+
+			// Print propagated units
 			writer.write("c Propagated units:\n");
+			String pu = "c";
+			for (Literal u : units)
+				pu += " " + u;
 			writer.write(pu + "\n");
+
 			writer.write("p cnf " + cnf.getSymbols().size() + " " + cnf.getClauses().size() + "\n");
 			writer.write(cnf.printClauses());
 			writer.close();
 			f.close();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
-		if(args.length != 2)
+	public static void main(String[] args) throws IOException {
+		if(args.length < 1)
 		{
 			System.err.println("Invalid arguments!\nUsage: \n\t java UCPSolver inputfile outputfile\n");
 			return;
@@ -104,4 +153,9 @@ public class UCPSolver {
 		s.simpleSolver(args[1]);
 		System.out.println("Done!\nPlease check the output file: "+args[1]);
 	}
-}
+             else {
+                  s.simpleSolver("");
+                  System.out.println("Done!"); 
+                  }
+             }
+         }

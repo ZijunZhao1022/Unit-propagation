@@ -26,11 +26,21 @@ public class Clause {
 
              public void removeUnit(Literal unit) {
 		    int size = literals.size();
+                       
+                    //If contradiction found, return false
+                    if(size==1)
+                    {
+                           Literal l = literals.get(0);
+			   if(l.equals(unit) && unit.sign != l.sign)
+				 return false;
+                    }
+
 		    int index = -1;
 		    for(int i=0;i<size;++i) {
 			    if(literals.get(i).equals(unit))
 				   index = i;
 		    }
+
 		    if(index > -1)
 		    {
 			   if(unit.sign != literals.get(index).sign)
@@ -38,7 +48,10 @@ public class Clause {
 			   else
 				literals.clear();
 		    }
+     
+                     return true;
 	      }
+
               public ArrayList<Literal> getLIterals() {
                       return literals;
               }
