@@ -1,8 +1,10 @@
-import java.FileInputStream;
-import java.FileOutputStream;
+
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.OutputStream;
-import java.OutputStreamWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -26,14 +28,14 @@ public class UCPSolver {
 		for (int i = 0; i < c.size(); ++i) {
 			ArrayList<Literal> l = c.get(i).getLiterals();
 			if (l.size() == 1) {
-                              int res = noContradiction(l.get(0));
-			      if (res<0) {
+				int res = noContradiction(l.get(0));
+				if (res<0) {
 					return false;
-			      }
-                              if (res>0) units.add(l.get(0));
+				}
+				if (res>0) units.add(l.get(0));
 			}
 		}
-                return true;
+		return true;
 	}
 
 	private int noContradiction(Literal l) {
@@ -120,20 +122,20 @@ public class UCPSolver {
 
 			// Print header
 			if (sat > 0)
-				writer.write("c Found satisfiable.\n");
+				writer.write("c Found satisfiable.\r\n");
 			else if (sat < 0)
-				writer.write("c Found unsatisfiable.\n");
+				writer.write("c Found unsatisfiable.\r\n");
 			else
-				writer.write("c Found undetermined.\n");
+				writer.write("c Found undetermined.\r\n");
 
 			// Print propagated units
-			writer.write("c Propagated units:\n");
+			writer.write("c Propagated units:\r\n");
 			String pu = "c";
 			for (Literal u : units)
 				pu += " " + u;
-			writer.write(pu + "\n");
+			writer.write(pu + "\r\n");
 
-			writer.write("p cnf " + cnf.getSymbols().size() + " " + cnf.getClauses().size() + "\n");
+			writer.write("p cnf " + cnf.getSymbols().size() + " " + cnf.getClauses().size() + "\r\n");
 			writer.write(cnf.printClauses());
 			writer.close();
 			f.close();
@@ -141,21 +143,21 @@ public class UCPSolver {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if(args.length < 1)
-		{
-			System.err.println("Invalid arguments!\nUsage: \n\t java UCPSolver inputfile outputfile\n");
+		if (args.length < 1) {
+			System.err.println("Invalid arguments!\nUsage: \n\t java UCPSolver inputfile (outputfile)\n");
 			return;
 		}
 		FileInputStream fis = new FileInputStream(args[0]);
-		System.out.println("Read input file: "+args[0]);
+		System.out.println("Read input file: " + args[0]);
 		Cnf c = new Cnf(fis);
 		UCPSolver s = new UCPSolver(c);
-		s.simpleSolver(args[1]);
-		System.out.println("Done!\nPlease check the output file: "+args[1]);
+		if (args.length == 2) {
+			s.simpleSolver(args[1]);
+			System.out.println("Done!\nPlease check the output file: " + args[1]);
+		} else {
+			s.simpleSolver("");
+			System.out.println("Done!");
+		}
 	}
-             else {
-                  s.simpleSolver("");
-                  System.out.println("Done!"); 
-                  }
-             }
-         }
+}
+

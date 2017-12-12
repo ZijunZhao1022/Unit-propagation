@@ -27,6 +27,6 @@ public String toString() {
 	public boolean sign;
 
 	/** index of proposition symbol */
-	public int symbol£»
+	public int symbol;
 
 }
