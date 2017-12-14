@@ -1,29 +1,69 @@
+/*******************************************************************************
+ * Copyright (C) 2017, Zijun Zhao 
+ * 
+ * All rights reserved. 
+ * 
+ * Contributors: 
+ *     Zijun Zhao - Initial coder and developer
+ * 
+ ******************************************************************************/
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Implements Cnf class, storing the Boolean formula. 
+ * 
+ * @author zijun
+ */ 
 public class Cnf {
-
+	/** 
+	 * list of all the symbols in the formula
+	 */
 	private ArrayList<Integer> symbols;
+	
+	/**
+	 * Get the symbols in the current clause
+	 * 
+	 * @return the current symbol list
+	 */
 	public ArrayList<Integer> getSymbols() {
 		return symbols;
 	}
-
+	
+	/** 
+	 * list of all the clauses in the formula
+	 */
 	private ArrayList<Clause> clauses;
 
+	/**
+	 * constructor for creating an empty formula
+	 */
 	public Cnf() {
 		this.clauses = new ArrayList<Clause>();
 		this.symbols = new ArrayList<Integer>();
 	}
 
+	/**
+	 * constructor for creating a formula from a given stream
+	 * 
+	 * @param fstream the given stream
+	 */
 	public Cnf(InputStream fstream) {
 		this.clauses = new ArrayList<Clause>();
 		this.symbols = new ArrayList<Integer>();
 		this.parse(fstream);
 	}
 	
+	/**
+	 * constructor for creating a formula with given number of symbols
+	 * 
+	 * @param numSymbols the given number of symbols
+	 */
 	public Cnf(int numSymbols) {
 		this.clauses = new ArrayList<Clause>();
 		this.symbols = new ArrayList<Integer>();
@@ -31,35 +71,54 @@ public class Cnf {
 			symbols.add(i);
 		}
 	}
-        /**
+
+	/**
 	 * Adds a new clause to this CNF.
+	 * 
+	 * @param l the literals contained in the clause
 	 */
 	public void addClause(ArrayList<Literal> l) {
 		clauses.add(new Clause(l));
 	}
-
+	
+	/**
+	 * Get the clauses of the current formula
+	 * 
+	 * @return the clause lists
+	 */
 	public ArrayList<Clause> getClauses() {
 		return clauses;
 	}
-
 	
+	/**
+	 * Print the current formula as a String
+	 * 
+	 * @return a String representing the current clause
+	 */
 	public String printClauses() {
 		String s="";
 		for (Clause c : this.clauses) {
-			s+=c.print()+'\n';
+			s+=c.print()+"0\n";
 		}
 		return s;
 	}
+	
+	/**
+	 * Parse an input stream to generate the formula
+	 * 
+	 * @param fstream the input stream
+	 */
 	public void parse(InputStream fstream) {
 		int numVariables = 0;
 		int numClauses = 0;
+		try {
 
-	try {
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String line;
 			int index = 0;
-	                while ((line = br.readLine()) != null && line.length() > 0) {
+
+			while ((line = br.readLine()) != null && line.length() > 0) {
 				if (line.length() == 0)
 					continue;
 				if (line.charAt(0) != 'c') {
@@ -89,11 +148,10 @@ public class Cnf {
 				}
 
 			}
+		} catch (IOException e) {
+		 	e.printStackTrace();
+		}
 			// printClauses();
 
-		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error: " + e.getMessage());
-			e.printStackTrace();
-		}
 	}
 }

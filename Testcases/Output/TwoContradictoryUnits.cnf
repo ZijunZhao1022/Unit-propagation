@@ -1,0 +1,6 @@
+c Found unsatisfiable.
+c Propagated units:
+c -1
+p cnf 1 2
+-1 0
+1 0

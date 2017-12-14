@@ -1,0 +1,4 @@
+c Found satisfiable.
+c Propagated units:
+c 2 -1 11 13 19 8 15 9 12 -20
+p cnf 21 0
